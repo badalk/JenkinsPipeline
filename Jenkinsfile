@@ -1,5 +1,9 @@
 pipeline {
     agent any
+        options {
+        // Nightwatch.js supports color ouput, so wrap add his option
+        ansiColor colorMapName: 'XTerm'
+    }
     stages {
         // stage('Checkout'){
         //   checkout scm
@@ -22,7 +26,9 @@ pipeline {
         stage ("Build"){
             steps {
                 echo "Hello World !!"
+                sh 'npm install'
             }
+            
         }
     }
 }
