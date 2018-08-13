@@ -23,7 +23,7 @@ pipeline {
         stage ("Build"){
             steps {
                 echo "Hello World !!"
-                sh 'npm install'
+                bat 'npm install'
             }
             
         }
