@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage ('Checkout Code'){
             steps{
-                node{ //use node to execute steps on an agent rather than master
+                //node{ //use node to execute steps on an agent rather than master
                     echo "Getting source code"
 
                     checkout([$class: 'GitSCM', branches: [[name: '*/master']], 
@@ -22,7 +22,7 @@ pipeline {
 
                     powershell returnStdout: true, script: '''$PSVersionTable.PSVersion'''
 
-                }
+                //}
             }
          }
         // stage('Checkout'){
