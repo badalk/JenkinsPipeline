@@ -5,12 +5,15 @@ pipeline {
     }
     stages {
         stage ('Checkout Code'){
-             checkout([$class: 'GitSCM', branches: [[name: '*/master']], 
-                doGenerateSubmoduleConfigurations: false, 
-                extensions: [[$class: 'CleanBeforeCheckout']], 
-                submoduleCfg: [], 
-                userRemoteConfigs: [[credentialsId: 'BadalsGithub', 
-                    url: 'https://github.com/badalk/sitecoreazure.git']]])
+            steps{
+                
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], 
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [[$class: 'CleanBeforeCheckout']], 
+                    submoduleCfg: [], 
+                    userRemoteConfigs: [[credentialsId: 'BadalsGithub', 
+                        url: 'https://github.com/badalk/sitecoreazure.git']]])
+            }
          }
         // stage('Checkout'){
         //   checkout scm
