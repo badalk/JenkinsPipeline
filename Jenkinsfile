@@ -47,7 +47,7 @@ pipeline {
             steps {
                 echo "Hello World !!"
                 bat 'npm install'
-                bat 'Invoke-Pester '
+                powershell returnStdout: true, script:  '''Invoke-Pester'''
             }
             
         }
