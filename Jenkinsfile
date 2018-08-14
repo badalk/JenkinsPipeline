@@ -1,18 +1,28 @@
 pipeline {
     agent any
-    // parameters{
-    //     repositoryBranch
-    // }
+    parameters{
+        string(name: 'scmBranch', defaultValue: 'master', description: 'Source Control Branch to build from') 
+        string(name: 'scmRepository', defaultValue: 'https://github.com/badalk/AzureResourceGroup.git', description: 'Source Control Branch to build from')        
+        file(name: "FILE", description: "Choose a file to upload")
+    }
     stages {
         stage ('Checkout Code'){
             steps{
+                node{ //use node to execute steps on an agent rather than master
+                    echo "Getting source code"
 
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], 
-                    doGenerateSubmoduleConfigurations: false, 
-                    extensions: [[$class: 'CleanBeforeCheckout']], 
-                    submoduleCfg: [], 
-                    userRemoteConfigs: [[credentialsId: 'BadalsGithub', 
-                        url: 'https://github.com/badalk/sitecoreazure.git']]])
+                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], 
+                        doGenerateSubmoduleConfigurations: false, 
+                        extensions: [[$class: 'CleanBeforeCheckout']], 
+                        submoduleCfg: [], 
+                        userRemoteConfigs: [[credentialsId: 'BadalsGithub', 
+                            url: 'https://github.com/badalk/AzureResourceGroup.git']]])
+
+                    echo "Checking Powershell Version"
+
+                    powershell returnStdout: true, script: '''$PSVersionTable.PSVersion'''
+
+                }
             }
          }
         // stage('Checkout'){
