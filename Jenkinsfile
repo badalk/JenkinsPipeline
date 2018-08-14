@@ -1,12 +1,12 @@
 pipeline {
     agent any
-    parameters{
-        repositoryBranch
-    }
+    // parameters{
+    //     repositoryBranch
+    // }
     stages {
         stage ('Checkout Code'){
             steps{
-                
+
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], 
                     doGenerateSubmoduleConfigurations: false, 
                     extensions: [[$class: 'CleanBeforeCheckout']], 
