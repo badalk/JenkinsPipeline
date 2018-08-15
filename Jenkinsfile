@@ -7,9 +7,11 @@ pipeline {
     }
     stages {
         stage ('Upload Parameter File'){
-            def inputFile = input message: 'Upload file', parameters: [file(name: 'azuredelpoy-acr.parameters.json')]
-            new hudson.FilePath(new File("$workspace/azuredelpoy-acr.parameters.json")).copyFrom(inputFile)
-            inputFile.delete()
+            steps{
+                def inputFile = input message: 'Upload file', parameters: [file(name: 'azuredelpoy-acr.parameters.json')]
+                new hudson.FilePath(new File("$workspace/azuredelpoy-acr.parameters.json")).copyFrom(inputFile)
+                inputFile.delete()
+            }
         }
         stage ('Build'){
             steps{
