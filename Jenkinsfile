@@ -20,7 +20,7 @@ pipeline {
                 echo "Hello Input, ${ParamFile}, nice to meet you."
                 echo "Workspace: $workspace"
                 script{
-                    new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(new hudson.FilePath({ParamFile}))
+                    new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(new FileInputStream('{ParamFile}'))
                 }
                 echo "Parameters File copied to workspace at this location $workspace"
             }
