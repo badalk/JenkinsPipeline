@@ -7,11 +7,6 @@ pipeline {
     }
     stages {
         stage ('Upload Parameter File'){
-            // steps{
-            //     inputFile = input message: 'Upload file', parameters: [file(name: 'azuredelpoy-acr.parameters.json')]
-            //     new hudson.FilePath(new File("$workspace/azuredelpoy-acr.parameters.json")).copyFrom(inputFile)
-            //     inputFile.delete()
-            // }
 
              input {
                 message "Upload parameters file"
@@ -44,9 +39,9 @@ pipeline {
 
         stage ("Test"){
             steps {
-                echo fileExists('input.json').toString()
-                def props = readJSON file: '$workspace/azuredelpoy-acr.parameters.json' // Read the json file
-                echo props
+                // echo fileExists('input.json').toString()
+                // def props = readJSON file: '$workspace/azuredelpoy-acr.parameters.json' // Read the json file
+                // echo props
 
                 // powershell '''$TemplateParams = @{ registryName= "aksacrregistry"; sku= "Premium"; acrAdminUserEnabled=true; location="eastus2"; replicatedregistrylocation="westus2"; isReplicationEnabled=true } 
                 // $parameters = @{ ResourceGroupName = "my-resource-group"; TemplateFile = ".\\appdeploy-acr.json"; Parameters = $TemplateParams } 
