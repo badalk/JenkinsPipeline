@@ -7,26 +7,19 @@ pipeline {
     }
     stages {
         stage ('Upload Parameter File'){
-                 script{
-                     def inputFile = 
-                     input {
-                        message "Upload parameters file"
-                        ok "Upload"
-                        parameters {
-                            file(name: "Parameters.json", description: "Choose a file to upload")
-                        }
-                    }
-
+              steps {
+                script{
+                     def inputFile = input (message "Upload parameters file", ok "Upload", parameters {file(name: "Parameters.json", description: "Choose a file to upload")})
+                    
                     new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(inputFile)
+                    echo "Hello, ${Parameters.json}, nice to meet you."
                     inputFile.delete()
- 
                  }
-             steps {
+                 
 
-                        echo "Hello, ${Parameters.json}, nice to meet you."
-                 }
             }
         }
+        
         stage ('Build'){
             steps{
                 //node{ //use node to execute steps on an agent rather than master
