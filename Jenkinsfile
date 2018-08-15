@@ -39,6 +39,7 @@ pipeline {
 
         stage ("Test"){
             steps {
+                echo "In test"
                 // echo fileExists('input.json').toString()
                 // def props = readJSON file: '$workspace/azuredelpoy-acr.parameters.json' // Read the json file
                 // echo props
