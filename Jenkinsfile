@@ -3,14 +3,25 @@ pipeline {
     parameters{
         string(name: 'Repository', defaultValue: 'https://github.com/badalk/AzureResourceGroup.git', description: 'Source Control Branch to build from')        
         string(name: 'Branch', defaultValue: 'master', description: 'Source Control Branch to build from') 
-        file(name: "ParameterFile", description: "Choose a file to upload")
+        // file(name: "ParameterFile", description: "Choose a file to upload")
     }
     stages {
         stage ('Upload Parameter File'){
-            steps{
-                def inputFile = input message: 'Upload file', parameters: [file(name: 'azuredelpoy-acr.parameters.json')]
-                new hudson.FilePath(new File("$workspace/azuredelpoy-acr.parameters.json")).copyFrom(inputFile)
-                inputFile.delete()
+            // steps{
+            //     inputFile = input message: 'Upload file', parameters: [file(name: 'azuredelpoy-acr.parameters.json')]
+            //     new hudson.FilePath(new File("$workspace/azuredelpoy-acr.parameters.json")).copyFrom(inputFile)
+            //     inputFile.delete()
+            // }
+
+             input {
+                message "Upload parameters file"
+                ok "Upload"
+                parameters {
+                    file(name: "ParameterFile", description: "Choose a file to upload")
+                }
+            }
+             steps {
+                echo "Hello, ${ParameterFile}, nice to meet you."
             }
         }
         stage ('Build'){
