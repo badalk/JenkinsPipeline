@@ -16,20 +16,20 @@ pipeline {
                 }
             }
              steps {
-                echo "Hello, ${ParameterFile}, nice to meet you."
+                echo "Hello, ${params.ParameterFile}, nice to meet you."
             }
         }
         stage ('Build'){
             steps{
                 //node{ //use node to execute steps on an agent rather than master
                     echo "Getting source code"
-
+                    echo "Branch: ${params.Branch}"
+                    echo "Repository: ${params.Repository}"
                     checkout([$class: 'GitSCM', branches: [[name: '${params.Branch}']], 
                         doGenerateSubmoduleConfigurations: false, 
-                        extensions: [[$class: 'CleanBeforeCheckout']], 
                         submoduleCfg: [], 
                         userRemoteConfigs: [[credentialsId: 'BadalGit', 
-                            url: '${params.Repository}']]])
+                        url: '${params.Repository}']]])
 
                     echo "Source code pulled from repository"
 
