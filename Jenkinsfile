@@ -54,7 +54,9 @@ pipeline {
         }
 
         stage ("Deploy"){
-
+            steps {
+                echo "In Deploy"
+            }
         }
     }
 }
