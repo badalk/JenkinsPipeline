@@ -28,7 +28,7 @@ pipeline {
                         doGenerateSubmoduleConfigurations: false, 
                         extensions: [[$class: 'CleanBeforeCheckout']], 
                         submoduleCfg: [], 
-                        userRemoteConfigs: [[credentialsId: 'BadalsGithub', 
+                        userRemoteConfigs: [[credentialsId: 'BadalGit', 
                             url: '${params.Repository}']]])
 
                     echo "Source code pulled from repository"
