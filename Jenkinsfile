@@ -26,8 +26,11 @@ pipeline {
                     echo "Getting source code"
                     echo "Branch: ${params.Branch}"
                     echo "Repository: ${params.Repository}"
-                    git config --global --unset credential.helper
-                    git config --system --unset credential.helper
+                    
+                    script{
+                        git config --global --unset credential.helper
+                        git config --system --unset credential.helper
+                     }       
                     
                     checkout([$class: 'GitSCM', branches: [[name: '*/${params.Branch}']], 
                         doGenerateSubmoduleConfigurations: false, 
