@@ -7,20 +7,19 @@ pipeline {
     }
     stages {
         stage ('Upload Parameter File'){
-              steps {
-                    // def inputFile = input (message: "Upload parameters file", ok: "Upload", parameters: {file(name: "Parameters.json", description: "Choose a file to upload")})
-                    
-                    input{
-                        message "Upload parameters file"
-                        ok "Upload File"
-                        parameters{
-                            file(name: "ParamFile", description: "Choose a file to upload")
-                        }
-                    }
-                    // new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(inputFile)
-                    echo "Hello, ${params.ParameterFile}, nice to meet you."
-                    echo "Hello, ${ParamFile}, nice to meet you."
-                    // inputFile.delete()
+            input {
+                message "Upload parameters file"
+                ok "Upload File"
+                parameters {
+                    file(name: "ParamFile", description: "Choose a file to upload")
+                }
+            }
+            steps {
+                // def inputFile = input (message: "Upload parameters file", ok: "Upload", parameters: {file(name: "Parameters.json", description: "Choose a file to upload")})
+                // new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(inputFile)
+                echo "Hello, ${params.ParameterFile}, nice to meet you."
+                echo "Hello Input, ${ParamFile}, nice to meet you."
+                // inputFile.delete()
             }
         }
         
@@ -36,11 +35,11 @@ pipeline {
                     //     git config --system --unset credential.helper
                     //  }       
                     
-                    withCredentials(checkout([$class: 'GitSCM', branches: [[name: '*/${params.Branch}']], 
-                        doGenerateSubmoduleConfigurations: false, 
-                        submoduleCfg: [], 
-                        userRemoteConfigs: [[credentialsId: 'BadalGit', 
-                        url: '${params.Repository}']]]))
+                    // withCredentials(checkout([$class: 'GitSCM', branches: [[name: '*/${params.Branch}']], 
+                    //     doGenerateSubmoduleConfigurations: false, 
+                    //     submoduleCfg: [], 
+                    //     userRemoteConfigs: [[credentialsId: 'BadalGit', 
+                    //     url: '${params.Repository}']]]))
 
                     echo "Source code pulled from repository"
 
