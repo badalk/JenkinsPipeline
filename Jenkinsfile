@@ -24,7 +24,7 @@ pipeline {
                 //node{ //use node to execute steps on an agent rather than master
                     echo "Getting source code"
 
-                    checkout([$class: 'GitSCM', branches: [[name: '*/${params.Branch}']], 
+                    checkout([$class: 'GitSCM', branches: [[name: '${params.Branch}']], 
                         doGenerateSubmoduleConfigurations: false, 
                         extensions: [[$class: 'CleanBeforeCheckout']], 
                         submoduleCfg: [], 
