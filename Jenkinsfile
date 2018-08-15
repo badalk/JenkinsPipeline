@@ -11,15 +11,15 @@ pipeline {
                 message "Upload parameters file"
                 ok "Upload File"
                 parameters {
-                    file(name: "ParameterFile.json", description: "Choose a file to upload")
+                    file(name: "ParameterFile", description: "Choose a file to upload")
                 }
             }
             steps {
                 echo "Hello, ${params.ParameterFile}, nice to meet you."
-                echo "Hello Input, ${ParameterFile.json}, nice to meet you."
+                echo "Hello Input, ${'ParameterFile.json'}, nice to meet you."
                 echo "Workspace: $workspace"
                 script{
-                    new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom({ParameterFile.json})
+                    new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom({ParameterFile})
                 }
                 echo "Parameters File copied to workspace at this location $workspace"
             }
