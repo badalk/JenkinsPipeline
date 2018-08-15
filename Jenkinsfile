@@ -11,15 +11,17 @@ pipeline {
                 message "Upload parameters file"
                 ok "Upload File"
                 parameters {
-                    file(name: "ParamFile", description: "Choose a file to upload")
+                    file(name: "ParameterFile.json", description: "Choose a file to upload")
                 }
             }
             steps {
-                // def inputFile = input (message: "Upload parameters file", ok: "Upload", parameters: {file(name: "Parameters.json", description: "Choose a file to upload")})
-                // new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(inputFile)
                 echo "Hello, ${params.ParameterFile}, nice to meet you."
-                echo "Hello Input, ${ParamFile}, nice to meet you."
-                // inputFile.delete()
+                echo "Hello Input, ${ParameterFile.json}, nice to meet you."
+                echo "Workspace: $workspace"
+                script{
+                    new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom({ParameterFile.json})
+                }
+                echo "Parameters File copied to workspace at this location $workspace"
             }
         }
         
