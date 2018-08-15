@@ -7,16 +7,24 @@ pipeline {
     }
     stages {
         stage ('Upload Parameter File'){
+                 script{
+                     def inputFile = 
+                     input {
+                        message "Upload parameters file"
+                        ok "Upload"
+                        parameters {
+                            file(name: "Parameters.json", description: "Choose a file to upload")
+                        }
+                    }
 
-             input {
-                message "Upload parameters file"
-                ok "Upload"
-                parameters {
-                    file(name: "ParameterFile", description: "Choose a file to upload")
-                }
-            }
+                    new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(inputFile)
+                    inputFile.delete()
+ 
+                 }
              steps {
-                echo "Hello, ${params.ParameterFile}, nice to meet you."
+
+                        echo "Hello, ${Parameters.json}, nice to meet you."
+                 }
             }
         }
         stage ('Build'){
@@ -25,7 +33,10 @@ pipeline {
                     echo "Getting source code"
                     echo "Branch: ${params.Branch}"
                     echo "Repository: ${params.Repository}"
-                    checkout([$class: 'GitSCM', branches: [[name: '${params.Branch}']], 
+                    git config --global --unset credential.helper
+                    git config --system --unset credential.helper
+                    
+                    checkout([$class: 'GitSCM', branches: [[name: '*/${params.Branch}']], 
                         doGenerateSubmoduleConfigurations: false, 
                         submoduleCfg: [], 
                         userRemoteConfigs: [[credentialsId: 'BadalGit', 
