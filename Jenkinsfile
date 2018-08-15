@@ -11,7 +11,7 @@ pipeline {
                     // def inputFile = input (message: "Upload parameters file", ok: "Upload", parameters: {file(name: "Parameters.json", description: "Choose a file to upload")})
                     
                     // new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(inputFile)
-                    echo "Hello, ${ParametersFile}, nice to meet you."
+                    echo "Hello, ${ParameterFile}, nice to meet you."
                     // inputFile.delete()
             }
         }
@@ -23,10 +23,10 @@ pipeline {
                     echo "Branch: ${params.Branch}"
                     echo "Repository: ${params.Repository}"
 
-                    script{
-                        git config --global --unset credential.helper
-                        git config --system --unset credential.helper
-                     }       
+                    // script{
+                    //     git config --global --unset credential.helper
+                    //     git config --system --unset credential.helper
+                    //  }       
                     
                     checkout([$class: 'GitSCM', branches: [[name: '*/${params.Branch}']], 
                         doGenerateSubmoduleConfigurations: false, 
