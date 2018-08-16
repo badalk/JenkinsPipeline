@@ -7,23 +7,23 @@ pipeline {
     }
     stages {
         stage ('Upload Parameter File'){
-            // input {
-            //     message "Upload parameters file"
-            //     ok "Upload File"
-            //     parameters {
-            //         file(name: "ParamFile", description: "Choose a file to upload")
-            //     }
+            input {
+                message "Upload parameters file"
+                ok "Upload File"
+                parameters {
+                    file(name: "ParamFile", description: "Choose a file to upload")
+                }
                 
-            // }
+            }
             steps {
                 echo "Hello, ${params.ParameterFile}, nice to meet you."
                 echo "Hello, ${ParameterFile}, nice to meet you."
-                // echo "Hello Input, ${ParamFile}, nice to meet you."
-                // echo "Workspace: $workspace"
-                // script{
-                //     new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(new FileInputStream("${ParamFile}"))
-                // }
-                // echo "Parameters File copied to workspace at this location $workspace"
+                echo "Hello Input, ${ParamFile}, nice to meet you."
+                echo "Workspace: $workspace"
+                script{
+                    new hudson.FilePath(new File("$workspace/Template-Parameters.json")).copyFrom(new FileInputStream("${ParamFile}"))
+                }
+                echo "Parameters File copied to workspace at this location $workspace"
             }
         }
         
@@ -56,7 +56,7 @@ pipeline {
                 // echo props
 
                 powershell '''$TemplateParams = @{ registryName= "aksacrregistry"; sku= "Premium"; acrAdminUserEnabled="true"; location="eastus2"; replicatedregistrylocation="westus2"; isReplicationEnabled="true" } 
-                $parameters = @{ ResourceGroupName = "my-resource-group"; TemplateFile = ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-acr.json"; Parameters = $TemplateParams } 
+                $parameters = @{ ResourceGroupName = "my-resource-group"; TemplateFile = ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-acr.json"; TemplateParameters = $TemplateParams } 
                 $script = @{ Path = ".\\*"; Parameters = $parameters } 
                 Invoke-Pester -Script $script -EnableExit -OutputFile ".\\AzureResourceGroup1\\TestResults.xml" -OutputFormat NUnitXml'''
 
