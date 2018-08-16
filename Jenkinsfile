@@ -33,11 +33,6 @@ pipeline {
                     echo "Getting source code"
                     echo "Branch: ${params.Branch}"
                     echo "Repository: ${params.Repository}"
-
-                    // script{
-                    //     git config --global --unset credential.helper
-                    //     git config --system --unset credential.helper
-                    //  }       
                     
                     checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
                         doGenerateSubmoduleConfigurations: false, 
@@ -52,16 +47,18 @@ pipeline {
          }
 
         stage ("Test"){
+            //when {not {branch 'Production'}}
+
             steps {
                 echo "In test"
                 // echo fileExists('input.json').toString()
                 // def props = readJSON file: '$workspace/azuredelpoy-acr.parameters.json' // Read the json file
                 // echo props
 
-                // powershell '''$TemplateParams = @{ registryName= "aksacrregistry"; sku= "Premium"; acrAdminUserEnabled=true; location="eastus2"; replicatedregistrylocation="westus2"; isReplicationEnabled=true } 
-                // $parameters = @{ ResourceGroupName = "my-resource-group"; TemplateFile = ".\\appdeploy-acr.json"; Parameters = $TemplateParams } 
-                // $script = @{ Path = ".\\*"; Parameters = $parameters } 
-                // Invoke-Pester -Script $script -EnableExit -OutputFile ".\\artifacts\\TestResults.xml" -OutputFormat NUnitXml'''
+                powershell '''$TemplateParams = @{ registryName= "aksacrregistry"; sku= "Premium"; acrAdminUserEnabled=true; location="eastus2"; replicatedregistrylocation="westus2"; isReplicationEnabled=true } 
+                $parameters = @{ ResourceGroupName = "my-resource-group"; TemplateFile = "$workspace\\AzureResourceGroup1\\rg-AKS\\appdeploy-acr.json"; Parameters = $TemplateParams } 
+                $script = @{ Path = ".\\*"; Parameters = $parameters } 
+                Invoke-Pester -Script $script -EnableExit -OutputFile ".\\artifacts\\TestResults.xml" -OutputFormat NUnitXml'''
 
             }
             
