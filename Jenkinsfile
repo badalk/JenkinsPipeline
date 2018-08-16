@@ -56,18 +56,18 @@ pipeline {
                 // echo props
 
                 powershell '''$TemplateParams = @{ registryName= "aksacrregistry"; sku= "Premium"; acrAdminUserEnabled=$true; location="eastus2"; replicatedregistrylocation="westus2"; isReplicationEnabled=$true } 
-                $parameters = @{ ResourceGroupName = "my-resource-group"; TemplateFile = ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-acr.json"; PassedParameters = $TemplateParams } 
+                $parameters = @{ ResourceGroupName = "rg-aks"; TemplateFile = ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-acr.json"; PassedParameters = $TemplateParams } 
                 $script = @{ Path = ".\\*"; Parameters = $parameters } 
                 Invoke-Pester -Script $script -EnableExit -OutputFile ".\\TestResults.xml" -OutputFormat NUnitXml'''
 
-                echo "${Build.FilePath}"
+                echo "${Build.Path}"
             }
 
-            post {
-                always {
-                    junit "${Build.FilePath}\\TestResults.xml"
-                }
-            }
+            // post {
+            //     always {
+            //         junit "${Build.FilePath}\\TestResults.xml"
+            //     }
+            // }
             
         }
 
