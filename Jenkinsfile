@@ -17,6 +17,7 @@ pipeline {
             }
             steps {
                 echo "Hello, ${params.ParameterFile}, nice to meet you."
+                echo "Hello, ${ParameterFile}, nice to meet you."
                 echo "Hello Input, ${ParamFile}, nice to meet you."
                 echo "Workspace: $workspace"
                 script{
