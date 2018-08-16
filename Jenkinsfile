@@ -55,7 +55,7 @@ pipeline {
                 // def props = readJSON file: '$workspace/azuredelpoy-acr.parameters.json' // Read the json file
                 // echo props
 
-                powershell '''$TemplateParams = @{ registryName= "aksacrregistry"; sku= "Premium"; acrAdminUserEnabled="true"; location="eastus2"; replicatedregistrylocation="westus2"; isReplicationEnabled="true" } 
+                powershell '''$TemplateParams = @{ registryName= "aksacrregistry"; sku= "Premium"; acrAdminUserEnabled=$true; location="eastus2"; replicatedregistrylocation="westus2"; isReplicationEnabled=$true } 
                 $parameters = @{ ResourceGroupName = "my-resource-group"; TemplateFile = ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-acr.json"; TemplateParameters = $TemplateParams } 
                 $script = @{ Path = ".\\*"; Parameters = $parameters } 
                 Invoke-Pester -Script $script -EnableExit -OutputFile ".\\AzureResourceGroup1\\TestResults.xml" -OutputFormat NUnitXml'''
