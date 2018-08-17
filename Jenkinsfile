@@ -60,14 +60,13 @@ pipeline {
                 $script = @{ Path = ".\\*"; Parameters = $parameters } 
                 Invoke-Pester -Script $script -EnableExit -OutputFile ".\\TestResults.xml" -OutputFormat NUnitXml'''
 
-                echo "${Build.Path}"
             }
 
-            // post {
-            //     always {
-            //         junit "${Build.FilePath}\\TestResults.xml"
-            //     }
-            // }
+            post {
+                always {
+                    junit ".\\TestResults.xml"
+                }
+            }
             
         }
 
