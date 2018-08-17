@@ -64,7 +64,7 @@ pipeline {
 
             post {
                 always {
-                    junit ".\\TestResults.xml"
+                    junit "${workspace}\\TestResults.xml"
                 }
             }
             
