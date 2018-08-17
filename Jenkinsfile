@@ -61,12 +61,18 @@ pipeline {
 
             }
 
-            // post {
-            //     always {
-            //         retry(3)
-            //         junit "${workspace}\\TestResults.xml"
-            //     }
-            // }
+            post {
+                always {
+                    retry(3) {
+                        if (fileExists('TestResults.xml')) {
+                            echo 'TestResults.xml: Yes'
+                        } else {
+                            echo 'TestResults.xml: No'
+                        }
+                        nunit testResultsPattern: 'TestResults.xml'
+                    }
+                }
+            }
             
         }
 
