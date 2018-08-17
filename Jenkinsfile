@@ -51,9 +51,6 @@ pipeline {
 
             steps {
                 echo "In test"
-                // echo fileExists('input.json').toString()
-                // def props = readJSON file: '$workspace/azuredelpoy-acr.parameters.json' // Read the json file
-                // echo props
 
                 powershell '''$TemplateParams = @{ registryName= "aksacrregistry"; sku= "Premium"; acrAdminUserEnabled=$true; location="eastus2"; replicatedregistrylocation="westus2"; isReplicationEnabled=$true } 
                 $parameters = @{ ResourceGroupName = "rg-aks"; TemplateFile = ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-acr.json"; PassedParameters = $TemplateParams } 
@@ -62,11 +59,12 @@ pipeline {
 
             }
 
-            post {
-                always {
-                    junit "${workspace}\\TestResults.xml"
-                }
-            }
+            // post {
+            //     always {
+            //         retry(3)
+            //         junit "${workspace}\\TestResults.xml"
+            //     }
+            // }
             
         }
 
