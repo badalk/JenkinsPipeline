@@ -33,6 +33,7 @@ pipeline {
 
                     checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
                         doGenerateSubmoduleConfigurations: false, 
+                        extensions: [[$class: 'CleanBeforeCheckout']], 
                         submoduleCfg: [], 
                         userRemoteConfigs: [[credentialsId: 'BadalGit', 
                         url: "${params.Repository}"]]])
