@@ -55,7 +55,7 @@ pipeline {
 
                 powershell '''$parameters = @{ ResourceGroupName = "rg-aks"; accountName ="http://azure-cli-2018-08-09-15-12-39"; password = "f1c35295-8e9a-4f7c-a753-57b9d15dc70e"; tenantId = "b25fcb44-9c49-413c-9fdc-b59b39447b84" } 
                 $script = @{ Path = ".\\*"; Parameters = $parameters } 
-                Invoke-Pester -Script $script -CodeCoverage -EnableExit -OutputFile ".\\TestResults.xml" -OutputFormat NUnitXml'''
+                Invoke-Pester -Script $script -EnableExit -OutputFile ".\\TestResults.xml" -OutputFormat NUnitXml'''
 
             }
 
