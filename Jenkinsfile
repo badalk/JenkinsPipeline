@@ -30,8 +30,8 @@ pipeline {
         stage ('Build'){
             steps{
                     script{
-                        currentBuild.displayname = "test"
-                        currentBuild.description = "test description"
+                        env.currentBuild.displayname = "test"
+                        env.currentBuild.description = "test description"
                     }
                     echo "Getting source code from Repository: ${params.Repository} and Branch: ${params.Branch}"
 
