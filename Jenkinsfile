@@ -29,6 +29,8 @@ pipeline {
         
         stage ('Build'){
             steps{
+                    currentBuild.displayname = "test"
+                    currentBuild.description = "test description"
                     echo "Getting source code from Repository: ${params.Repository} and Branch: ${params.Branch}"
 
                     checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
