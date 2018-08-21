@@ -20,7 +20,6 @@ pipeline {
                     //     env.currentBuild.description = "test description"
                     // }
 
-                    echo currentBuild
                     echo "Getting source code from Repository: ${params.Repository} and Branch: ${params.Branch}"
 
                     checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
