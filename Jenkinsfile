@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     parameters{
-        string(name: 'Repository', defaultValue: 'https://github.com/badalk/AzureResourceGroup.git', description: 'Source Control Branch to build from')        
+        string(name: 'Repository', defaultValue: 'git@github.com:badalk/AzureResourceGroup.git', description: 'Source Control Branch to build from')        
         string(name: 'Branch', defaultValue: 'master', description: 'Source Control Branch to build from') 
         // file(name: "ParameterFile", description: "Choose a file to upload")
     }
@@ -22,13 +22,20 @@ pipeline {
 
                     echo "Getting source code from Repository: ${params.Repository} and Branch: ${params.Branch}"
 
+                    // checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
+                    //     doGenerateSubmoduleConfigurations: false, 
+                    //     extensions: [[$class: 'CleanBeforeCheckout']], 
+                    //     submoduleCfg: [], 
+                    //     userRemoteConfigs: [[credentialsId: 'BadalGit', 
+                    //     url: "${params.Repository}"]]])
+
                     checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
                         doGenerateSubmoduleConfigurations: false, 
-                        extensions: [[$class: 'CleanBeforeCheckout']], 
+                        extensions: [], 
                         submoduleCfg: [], 
-                        userRemoteConfigs: [[credentialsId: 'BadalGit', 
-                        url: "${params.Repository}"]]])
-
+                        userRemoteConfigs: [[credentialsId: 'github-jenkins-ssh-key', 
+                                            url: "${params.Repository}"]]])
+                    
                     echo "Source code pulled from repository"
 
             }
