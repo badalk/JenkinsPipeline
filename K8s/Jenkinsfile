@@ -72,25 +72,28 @@ pipeline {
             }
         }
         stage ("Configure AKS"){
-            //get admin contex by connecting to AKS cluster
-            echo "0. Getting kubernetes context"
-            sh "az aks --get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
 
-            //1. Create Cluster Role Bindings will
-            echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
-            sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
+            steps {
+                //get admin contex by connecting to AKS cluster
+                echo "0. Getting kubernetes context"
+                sh "az aks --get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
 
-            //2. Install Helm and Initialize
+                //1. Create Cluster Role Bindings will
+                echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
+                sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
 
-            //3. Install Cert Manager
+                //2. Install Helm and Initialize
 
-            //4. Install Ingress Controller
+                //3. Install Cert Manager
 
-            //5. Install Kube Router 
+                //4. Install Ingress Controller
 
-            //6. Install Azure Pod Identity Resources & Install Azure Key Vault Support
-            
-            //7. Install OSBA Service Catalog
+                //5. Install Kube Router 
+
+                //6. Install Azure Pod Identity Resources & Install Azure Key Vault Support
+                
+                //7. Install OSBA Service Catalog
+            }
 
         }
     }
