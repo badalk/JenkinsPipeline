@@ -55,7 +55,7 @@ pipeline {
                 
 
 
-                sh "pwsh New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json).BaseName + "-" + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')) `
+                sh "pwsh New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json).BaseName + \"-\" + ((Get-Date).ToUniversalTime()).ToString(\"MMdd-HHmm\")) `
                                     -ResourceGroupName ${parameters.resourceGroup} `
                                     -TemplateFile .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json `
                                     -TemplateParameterFile .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks-cicd.parameters.json `
