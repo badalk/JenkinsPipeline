@@ -52,22 +52,18 @@ pipeline {
         stage ("Deploy"){
             steps {
                 echo "Deploying AKS Cluster ..."
+                
 
-                sh '''pwsh New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json").BaseName + \'-\' + ((Get-Date).ToUniversalTime()).ToString(\'MMdd-HHmm\')) `
-                                                -ResourceGroupName "${params.resourceGroup}" `
-                                                -TemplateFile ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json"`
-                                                -TemplateParameterFile ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks-cicd.parameters.json"`
-                                                -Mode Incremental `
-                                                -Force -Verbose `
-                                                -ErrorVariable ErrorMessages'''
 
-                // powershell '''New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem '''${params.TemplateFile}''').BaseName + \'-\' + ((Get-Date).ToUniversalTime()).ToString(\'MMdd-HHmm\')) `
-                //                                 -ResourceGroupName $ResourceGroupName `
-                //                                 -TemplateFile '''${params.TemplateFile}'''`
-                //                                 -TemplateParameterFile '''${params.TemplateParametersFile}''' `
-                //                                 -Mode Incremental `
-                //                                 -Force -Verbose `
-                //                                 -ErrorVariable ErrorMessages'''
+                sh "pwsh New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem .\AzureResourceGroup1\rg-AKS\azuredeploy-aks.json).BaseName + "-" + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')) `
+                                    -ResourceGroupName ${parameters.resourceGroup} `
+                                    -TemplateFile .\AzureResourceGroup1\rg-AKS\azuredeploy-aks.json `
+                                    -TemplateParameterFile .\AzureResourceGroup1\rg-AKS\azuredeploy-aks-cicd.parameters.json `
+                                    -Mode Incremental `
+                                    -Force -Verbose `
+                                    -ErrorVariable ErrorMessages
+
+
 
             }
         }
