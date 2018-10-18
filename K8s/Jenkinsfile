@@ -1,0 +1,94 @@
+pipeline {
+    agent any
+    
+    parameters{
+        string(name: 'Repository', defaultValue: 'git@github.com:badalk/AzureResourceGroup.git', description: 'Source Control Branch to build from')        
+        string(name: 'Branch', defaultValue: 'master', description: 'Source Control Branch to build from') 
+        string(name: 'resourceGroup', description: 'Source Control Branch to build from') 
+        string(name: 'clusterName', description: 'Source Control Branch to build from') 
+       
+    }
+
+    environment {
+        BUILD_DISPLAY_NAME = "test"
+        JOB_NAME = "CI Build for Cloud Automation"
+   }
+    stages {
+        
+        stage ('Build'){
+            steps{
+                    // script{
+                    //     env.currentBuild.displayname = "test"
+                    //     env.currentBuild.description = "test description"
+                    // }
+
+                    echo "Getting source code from Repository: ${params.Repository} and Branch: ${params.Branch}"
+
+                    // checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
+                    //     doGenerateSubmoduleConfigurations: false, 
+                    //     extensions: [[$class: 'CleanBeforeCheckout']], 
+                    //     submoduleCfg: [], 
+                    //     userRemoteConfigs: [[credentialsId: 'BadalGit', 
+                    //     url: "${params.Repository}"]]])
+
+                    checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
+                        doGenerateSubmoduleConfigurations: false, 
+                        extensions: [], 
+                        submoduleCfg: [], 
+                        userRemoteConfigs: [[credentialsId: 'github-jenkins-ssh-key', 
+                                            url: "${params.Repository}"]]])
+                    
+                    echo "Source code pulled from repository"
+
+            }
+         }
+
+        stage ("Test") {
+            echo "Testing is yet to done..."
+        }
+
+        stage ("Deploy"){
+            steps {
+                echo "Deploying AKS Cluster ..."
+
+                powershell '''New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json").BaseName + \'-\' + ((Get-Date).ToUniversalTime()).ToString(\'MMdd-HHmm\')) `
+                                                -ResourceGroupName "${params.resourceGroup}" `
+                                                -TemplateFile ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json"`
+                                                -TemplateParameterFile ".\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks-cicd.parameters.json"`
+                                                -Mode Incremental `
+                                                -Force -Verbose `
+                                                -ErrorVariable ErrorMessages'''
+
+                // powershell '''New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem '''${params.TemplateFile}''').BaseName + \'-\' + ((Get-Date).ToUniversalTime()).ToString(\'MMdd-HHmm\')) `
+                //                                 -ResourceGroupName $ResourceGroupName `
+                //                                 -TemplateFile '''${params.TemplateFile}'''`
+                //                                 -TemplateParameterFile '''${params.TemplateParametersFile}''' `
+                //                                 -Mode Incremental `
+                //                                 -Force -Verbose `
+                //                                 -ErrorVariable ErrorMessages'''
+
+            }
+        }
+        stage ("Configure AKS"){
+            //get admin contex by connecting to AKS cluster
+            echo "Getting kubernetes context"
+            sh "az aks --get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
+
+            //1. Create Cluster Role Bindings will
+            sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
+
+            //2. Install Helm and Initialize
+
+            //3. Install Cert Manager
+
+            //4. Install Ingress Controller
+
+            //5. Install Kube Router 
+
+            //6. Install Azure Pod Identity Resources & Install Azure Key Vault Support
+            
+            //7. Install OSBA Service Catalog
+
+        }
+    }
+}
