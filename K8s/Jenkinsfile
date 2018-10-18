@@ -4,8 +4,8 @@ pipeline {
     parameters{
         string(name: 'Repository', defaultValue: 'git@github.com:badalk/AzureResourceGroup.git', description: 'Source Control Branch to build from')        
         string(name: 'Branch', defaultValue: 'master', description: 'Source Control Branch to build from') 
-        string(name: 'resourceGroup', description: 'Source Control Branch to build from') 
-        string(name: 'clusterName', description: 'Source Control Branch to build from') 
+        string(name: 'resourceGroup', description: 'resource Group name where AKS will be deployed') 
+        string(name: 'clusterName', description: 'name of AKS cluster') 
        
     }
 
@@ -44,7 +44,9 @@ pipeline {
          }
 
         stage ("Test") {
-            echo "Testing is yet to done..."
+            steps {
+                echo "Testing is yet to done..."
+            }
         }
 
         stage ("Deploy"){
