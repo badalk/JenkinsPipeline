@@ -68,6 +68,8 @@ pipeline {
                 echo "--------------------------------------------------------------------------"
                 echo "  2. Installing and initializing Helm and installing ingress controller"
                 echo "--------------------------------------------------------------------------"
+                echo "changing permission"
+                sh "sudo chmod 755 -R ${WORKSPACE}"
                 sh "./AzureResourceGroup1/rg-AKS/Scripts/k8s-ingress-controller-configuration.sh ${params.resourceGroup} ${params.clusterName}"
 
                 //3. Install Cert Manager
