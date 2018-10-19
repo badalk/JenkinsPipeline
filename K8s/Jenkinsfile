@@ -53,10 +53,11 @@ pipeline {
             steps {
                 echo "Deploying AKS Cluster ..."
                 
+                // sh "az deployment create --versbose --output json --template-uri .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json --name deployment --parameters  "
 
+                // sh "pwsh New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json).BaseName + \"-\" + ((Get-Date).ToUniversalTime()).ToString(\"MMdd-HHmm\")) -ResourceGroupName ${parameters.resourceGroup} -TemplateFile .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json -TemplateParameterFile .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks-cicd.parameters.json -Mode Incremental -Force -Verbose -ErrorVariable ErrorMessages"
 
-                sh "pwsh New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json).BaseName + \"-\" + ((Get-Date).ToUniversalTime()).ToString(\"MMdd-HHmm\")) -ResourceGroupName ${parameters.resourceGroup} -TemplateFile .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json -TemplateParameterFile .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks-cicd.parameters.json -Mode Incremental -Force -Verbose -ErrorVariable ErrorMessages"
-
+                sh "pwsh -File K8s/deploy-aks-cluster.ps1 ${WORKSPACE}/output.json \"${BUILD_USER}\" ${params.SubscriptionName} ${params.AutomationAccountName} ${params.Name} ${params.ResourceGroupName}"
 
 
             }
