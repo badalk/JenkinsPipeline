@@ -54,7 +54,7 @@ pipeline {
                 sh "kubectl config view"
 
                 echo "0. Getting kubernetes context"
-                sh "az login --service-principal -u \"Jenkins\" -p \"ynhIv9Q+zEr+Nh/Nb16BxSdQ8VA0bytRGjWO7Jy6L5k=\""
+                sh "az login --service-principal -u \"Jenkins\" -p \"ynhIv9Q+zEr+Nh/Nb16BxSdQ8VA0bytRGjWO7Jy6L5k=\" --tenant \"b25fcb44-9c49-413c-9fdc-b59b39447b84\""
                 sh "az aks get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
 
                 //1. Create Cluster Role Bindings will
