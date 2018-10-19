@@ -5,4 +5,4 @@ nodeResourceGroup="$(az aks show --resource-group ${aksResourceGroup} --name ${a
 
 echo "${nodeResourceGroup}"
 
-az network public-ip create --resource-group "${nodeResourceGroup}" --name myAKSPublicIP --allocation-method static
+az network public-ip create --resource-group "${nodeResourceGroup}" --name aksIngressPublicIP --allocation-method static
