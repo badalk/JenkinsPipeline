@@ -62,7 +62,7 @@ pipeline {
                 //sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
 
                 //2. Install Helm and Initialize
-                sh ".\\k8s-ingress-controller-configuration.sh ${params.resourceGroup} ${params.clusterName}"
+                sh ".\\Scripts\\k8s-ingress-controller-configuration.sh ${params.resourceGroup} ${params.clusterName}"
 
                 //3. Install Cert Manager
 
