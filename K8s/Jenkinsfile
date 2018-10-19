@@ -50,7 +50,7 @@ pipeline {
             steps {
                 //get admin contex by connecting to AKS cluster
                 echo "Testing kubectl"
-                sh "kubctl config view"
+                sh "kubectl config view"
 
                 echo "0. Getting kubernetes context"
                 sh "az aks --get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
