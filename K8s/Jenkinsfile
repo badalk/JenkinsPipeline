@@ -1,3 +1,4 @@
+def aksClusterResourceGroup = 'UNKNOWN'
 pipeline {
     agent any
     
@@ -53,13 +54,14 @@ pipeline {
                 sh "kubectl config view"
 
                 echo "0. Getting kubernetes context"
-                sh "az aks --get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
+                sh "az aks get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
 
                 //1. Create Cluster Role Bindings will
-                echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
+                //echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
                 //sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
 
                 //2. Install Helm and Initialize
+                sh ".\\k8s-ingress-controller-configuration.sh ${params.resourceGroup} ${params.clusterName}"
 
                 //3. Install Cert Manager
 
