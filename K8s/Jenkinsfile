@@ -17,19 +17,8 @@ pipeline {
         
         stage ('Build'){
             steps{
-                    // script{
-                    //     env.currentBuild.displayname = "test"
-                    //     env.currentBuild.description = "test description"
-                    // }
 
                     echo "Getting source code from Repository: ${params.Repository} and Branch: ${params.Branch}"
-
-                    // checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
-                    //     doGenerateSubmoduleConfigurations: false, 
-                    //     extensions: [[$class: 'CleanBeforeCheckout']], 
-                    //     submoduleCfg: [], 
-                    //     userRemoteConfigs: [[credentialsId: 'BadalGit', 
-                    //     url: "${params.Repository}"]]])
 
                     checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
                         doGenerateSubmoduleConfigurations: false, 
@@ -53,25 +42,22 @@ pipeline {
             steps {
                 echo "Deploying AKS Cluster ..."
                 
-                // sh "az deployment create --versbose --output json --template-uri .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json --name deployment --parameters  "
-
-                // sh "pwsh New-AzureRmResourceGroupDeployment -Name ((Get-ChildItem .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json).BaseName + \"-\" + ((Get-Date).ToUniversalTime()).ToString(\"MMdd-HHmm\")) -ResourceGroupName ${parameters.resourceGroup} -TemplateFile .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks.json -TemplateParameterFile .\\AzureResourceGroup1\\rg-AKS\\azuredeploy-aks-cicd.parameters.json -Mode Incremental -Force -Verbose -ErrorVariable ErrorMessages"
-
-                sh "pwsh -File K8s/deploy-aks-cluster.ps1 ${WORKSPACE}/output.json \"${BUILD_USER}\" ${params.SubscriptionName} ${params.AutomationAccountName} ${params.Name} ${params.ResourceGroupName}"
-
-
+                //sh "pwsh -File K8s/deploy-aks-cluster.ps1 ${WORKSPACE}/output.json \"${BUILD_USER}\" ${params.SubscriptionName} ${params.AutomationAccountName} ${params.Name} ${params.ResourceGroupName}"
             }
         }
         stage ("Configure AKS"){
 
             steps {
                 //get admin contex by connecting to AKS cluster
+                echo "Testing kubectl"
+                sh "kubctl config view"
+
                 echo "0. Getting kubernetes context"
                 sh "az aks --get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
 
                 //1. Create Cluster Role Bindings will
                 echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
-                sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
+                //sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
 
                 //2. Install Helm and Initialize
 
