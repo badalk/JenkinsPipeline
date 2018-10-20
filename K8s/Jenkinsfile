@@ -72,7 +72,7 @@ pipeline {
                 echo "--------------------------------------------------------------------------"
                 echo "changing permission"
                 sh "id -a"
-                sh "sudo -S chmod 755 -R ${WORKSPACE}$'\n'Welcome1234#"
+                sh "sudo -S chmod 755 -R ${WORKSPACE}${'\n'}Welcome1234#"
                 sh "./AzureResourceGroup1/rg-AKS/Scripts/k8s-ingress-controller-configuration.sh ${params.resourceGroup} ${params.clusterName}"
 
                 //3. Install Cert Manager
