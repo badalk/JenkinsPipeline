@@ -20,6 +20,8 @@ pipeline {
             steps{
 
                     echo "Getting source code from Repository: ${params.Repository} and Branch: ${params.Branch}"
+                    
+                    sh "newgrp jenkins"
 
                     checkout([$class: 'GitSCM', branches: [[name: "*/${params.Branch}"]], 
                         doGenerateSubmoduleConfigurations: false, 
@@ -70,8 +72,7 @@ pipeline {
                 echo "--------------------------------------------------------------------------"
                 echo "changing permission"
                 sh "id -a"
-                sh "sudo -S chmod 755 -R ${WORKSPACE}"
-                sh ""
+                sh "sudo -S chmod 755 -R ${WORKSPACE}"$'\n'"Welcome1234#"
                 sh "./AzureResourceGroup1/rg-AKS/Scripts/k8s-ingress-controller-configuration.sh ${params.resourceGroup} ${params.clusterName}"
 
                 //3. Install Cert Manager
