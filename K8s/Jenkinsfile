@@ -73,7 +73,13 @@ pipeline {
                 echo "changing permission"
                 sh "id -a"
                 // sh "sudo -S chmod 755 -R ${WORKSPACE}${'\n'}Welcome1234#"
-                sh "./AzureResourceGroup1/rg-AKS/Scripts/k8s-ingress-controller-configuration.sh ${params.resourceGroup} ${params.clusterName}"
+                script {
+                    nodeResourceGroup="$(az aks show --resource-group ${params.resourceGroup}  --name ${params.clusterName} --query nodeResourceGroup -o tsv)"
+
+                    echo "${nodeResourceGroup}"
+
+                    az network public-ip create --resource-group "${nodeResourceGroup}" --name aksIngressPublicIP --allocation-method static
+                }
 
                 //3. Install Cert Manager
 
