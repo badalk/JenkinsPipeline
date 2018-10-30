@@ -66,24 +66,28 @@ pipeline {
                 //echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
                 //sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
 
-                //2. Install Helm and Initialize
+                //2. Install Helm and Initialize and Install ingress controller
                 echo "--------------------------------------------------------------------------"
-                echo "  2. Installing and initializing Helm and installing ingress controller"
+                echo "  2. Installing and initializing Helm "
                 echo "--------------------------------------------------------------------------"
                 echo "changing permission"
                 sh "id -a"
                 // sh "sudo -S chmod 755 -R ${WORKSPACE}${'\n'}Welcome1234#"
-                sh "./AzureResourceGroup1/rg-AKS/Scripts/k8s-ingress-controller-configuration.sh ${params.resourceGroup} ${params.clusterName}"
+                sh "bash ./AzureResourceGroup1/rg-AKS/Scripts/k8s-install-helm.sh"
 
                 //3. Install Cert Manager
+                echo "--------------------------------------------------------------------------"
+                echo "  3. Installing ingress controller on static IP"
+                echo "--------------------------------------------------------------------------"
+                sh "bash ./AzureResourceGroup1/rg-AKS/Scripts/k8s-install-ingress-controller.sh ${params.resourceGroup} ${params.clusterName}"
 
-                //4. Install Ingress Controller
+                //6. Install Azure Pod Identity Resources & Install Azure Key Vault Support
 
                 //5. Install Kube Router 
 
-                //6. Install Azure Pod Identity Resources & Install Azure Key Vault Support
-                
                 //7. Install OSBA Service Catalog
+                
+                //4. Install cluster scaler??
             }
 
         }
