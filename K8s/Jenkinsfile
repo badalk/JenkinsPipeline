@@ -66,9 +66,10 @@ pipeline {
                         sh "rm ~/.kube/config"
                     }
                 }
-                sh "az login --service-principal -u \"a03158e9-58f5-4e5e-b11b-b5a2df77c661\" -p \"FiS+yQNCI7GrX4jJ5ydyZOH9XmbCFCSBN70SdiwwtWg=\" --tenant \"b25fcb44-9c49-413c-9fdc-b59b39447b84\""
-                sh "az aks get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
-
+                script{
+                    az login --service-principal -u "a03158e9-58f5-4e5e-b11b-b5a2df77c661" -p "FiS+yQNCI7GrX4jJ5ydyZOH9XmbCFCSBN70SdiwwtWg=" --tenant "b25fcb44-9c49-413c-9fdc-b59b39447b84"
+                    az aks get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin
+                }
                 //1. Create Cluster Role Bindings will
                 //echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
                 //sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
@@ -80,13 +81,13 @@ pipeline {
                 echo "changing permission"
                 sh "id -a"
                 // sh "sudo -S chmod 755 -R ${WORKSPACE}${'\n'}Welcome1234#"
-                sh "bash ./AzureResourceGroup1/rg-AKS/Scripts/k8s-install-helm.sh"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-helm.sh"
 
                 //3. Install Cert Manager
                 echo "--------------------------------------------------------------------------"
                 echo "  3. Installing ingress controller on static IP"
                 echo "--------------------------------------------------------------------------"
-                sh "bash ./AzureResourceGroup1/rg-AKS/Scripts/k8s-install-ingress-controller.sh ${params.resourceGroup} ${params.clusterName}"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-ingress-controller.sh ${params.resourceGroup} ${params.clusterName}"
 
                 //6. Install Azure Pod Identity Resources & Install Azure Key Vault Support
 
