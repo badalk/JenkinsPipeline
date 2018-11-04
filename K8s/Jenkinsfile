@@ -61,21 +61,24 @@ pipeline {
                 echo "  0. Getting kubernetes context"
                 echo "------------------------------------------------------------------"
 
-                script {
-                    def exists = fileExists '~/.kube/config'
+                // script {
+                //     def exists = fileExists "~/.kube/config"
+                //     echo 
 
-                    echo "Kube config exists: ${exists}"
-                    if (exists) {
-                        echo "Removing current kube config"
-                        sh "rm ~/.kube/config"
-                    }
-                }
+                //     echo "Kube config exists: ${exists}"
+                //     if (exists) {
+                //         echo "Removing current kube config"
+                //         sh "rm ~/.kube/config"
+                //     }
+                // }
+                sh "rm ~/.kube/config"
+
                 sh "az login --service-principal -u \"a03158e9-58f5-4e5e-b11b-b5a2df77c661\" -p \"FiS+yQNCI7GrX4jJ5ydyZOH9XmbCFCSBN70SdiwwtWg=\" --tenant \"b25fcb44-9c49-413c-9fdc-b59b39447b84\""
                 sh "az aks get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
 
                 //1. Create Cluster Role Bindings will
                 //echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
-                //sh ".\\AzureResourceGroup1\\rg-AKS\\Scripts\\deploy-aks-create-cluster-admin-rolebindings.sh"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/deploy-aks-create-cluster-admin-rolebindings.sh"
 
                 //2. Install Helm and Initialize and Install ingress controller
                 echo "--------------------------------------------------------------------------"
