@@ -64,7 +64,9 @@ pipeline {
                 script {
                     def exists = fileExists '~/.kube/config'
 
+                    echo "Kube config exists: ${exists}"
                     if (exists) {
+                        echo "Removing current kube config"
                         sh "rm ~/.kube/config"
                     }
                 }
