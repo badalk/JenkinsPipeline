@@ -78,7 +78,7 @@ pipeline {
 
                 //1. Create Cluster Role Bindings will
                 //echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
-                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/deploy-aks-create-cluster-admin-rolebindings.sh"
+                // sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/deploy-aks-create-cluster-admin-rolebindings.sh"
 
                 //2. Install Helm and Initialize and Install ingress controller
                 echo "--------------------------------------------------------------------------"
