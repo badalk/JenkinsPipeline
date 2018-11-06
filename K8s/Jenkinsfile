@@ -7,8 +7,10 @@ pipeline {
         string(name: 'Branch', defaultValue: 'master', description: 'Source Control Branch to build from') 
         string(name: 'resourceGroup', defaultValue: 'rg-aks-cicd', description: 'resource Group name where AKS will be deployed') 
         string(name: 'clusterName', defaultValue: 'mycicdakscluster', description: 'name of AKS cluster') 
-        // string(name: 'keyVaultResourceId', defaultValue: '', description: 'name of AKS cluster') 
-        string(name: 'ingressDNSName', defaultValue: 'ingress-mycicdakscluster', description: 'name of AKS cluster') 
+        string(name: 'keyVaultResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourceGroups/rg-secrets/providers/Microsoft.KeyVault/vaults/aks-sp-key-secret-vault', description: 'Resource ID of the key vault where K8s secrets will be managed') 
+        string(name: 'ingressDNSName', defaultValue: 'ingress-mycicdakscluster', description: 'name of ingress controller') 
+        string(name: 'acrname', defaultValue:'badalacr', description: 'name of azure container registry')
+        string(name: 'aksServicePrincipalClientId', defaultValue:'a03158e9-58f5-4e5e-b11b-b5a2df77c661', description: 'client ID of the service principal which also has access to read keys from key vault')
 
     }
 
@@ -99,7 +101,7 @@ pipeline {
                 echo "------------------------------------------------------------------------------------"
                 echo "  4. Install Azure Pod Identity Resources & Install Azure Key Vault Support"
                 echo "------------------------------------------------------------------------------------"
-                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-azurepodidentity-keyvault-flextool ${params.resourceGroup} ${params.clusterName}" //${params.keyVaultResourceId}
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-azurepodidentity-keyvault-flextool.sh ${params.resourceGroup} ${params.clusterName} ${params.acrName} ${params.keyVaultResourceId} ${params.aksServicePrincipalClientId} ${params.azurePodIdentityName}"
 /*
                 //5. Install Kube Router 
                 echo "--------------------------------------------------------------------------"
