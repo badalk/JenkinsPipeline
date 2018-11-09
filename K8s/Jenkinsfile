@@ -9,8 +9,9 @@ pipeline {
         string(name: 'clusterName', defaultValue: 'mycicdakscluster', description: 'name of AKS cluster') 
         string(name: 'keyVaultResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourceGroups/rg-secrets/providers/Microsoft.KeyVault/vaults/aks-sp-key-secret-vault', description: 'Resource ID of the key vault where K8s secrets will be managed') 
         string(name: 'ingressDNSName', defaultValue: 'ingress-mycicdakscluster', description: 'name of ingress controller') 
-        string(name: 'acrname', defaultValue:'badalacr', description: 'name of azure container registry')
+        string(name: 'acrName', defaultValue:'badalacr', description: 'name of azure container registry')
         string(name: 'aksServicePrincipalClientId', defaultValue:'a03158e9-58f5-4e5e-b11b-b5a2df77c661', description: 'client ID of the service principal which also has access to read keys from key vault')
+        string(name: 'azurePodIdentityName', defaultValue: 'az-k8s-kvreader-identity', description: 'Name of azure pod identity')
 
     }
 
