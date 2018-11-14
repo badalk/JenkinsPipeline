@@ -1,4 +1,3 @@
-def aksClusterResourceGroup = 'UNKNOWN'
 pipeline {
     agent any
     
@@ -8,9 +7,9 @@ pipeline {
         string(name: 'resourceGroup', defaultValue: 'rg-aks-cicd', description: 'resource Group name where AKS will be deployed') 
         string(name: 'kubernetesVersion', defaultValue: '1.11.3', description: 'Kubernetes version you want to install') 
         string(name: 'clusterName', defaultValue: 'mycicdakscluster', description: 'name of AKS cluster') 
-        string(name: 'numberOfNodes', defaultValue: 2, description: 'Number of Node VMs to be depoyed in the cluster') 
+        string(name: 'numberOfNodes', defaultValue: '2', description: 'Number of Node VMs to be depoyed in the cluster') 
         string(name: 'nodeVMSKU', defaultValue: 'Standard_DS1_V2', description: 'SKU of the VM that will be deployed as node in the cluster') 
-        string(name: 'maxPodsPerNode', defaultValue: 30, description: 'Number of pods that a node can accomodate') 
+        string(name: 'maxPodsPerNode', defaultValue: '30', description: 'Number of pods that a node can accomodate') 
         string(name: 'vnetSubnetResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourceGroups/rg-network/providers/Microsoft.Network/virtualNetworks/vnet-enterprise/subnets/vnet-k8s-arm', description: 'Subnet Resource Id') 
         string(name: 'logAnalyticsWorkspaceResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourcegroups/defaultresourcegroup-eus/providers/microsoft.operationalinsights/workspaces/defaultworkspace-4dfeb08c-7e41-40af-a9fa-fabcac401c2d-eus', description: 'Log Analytics Workspace Id')
         string(name: 'keyVaultResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourceGroups/rg-secrets/providers/Microsoft.KeyVault/vaults/aks-sp-key-secret-vault', description: 'Resource ID of the key vault where K8s secrets will be managed') 
