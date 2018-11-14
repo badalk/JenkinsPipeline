@@ -15,9 +15,14 @@ pipeline {
         string(name: 'keyVaultResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourceGroups/rg-secrets/providers/Microsoft.KeyVault/vaults/aks-sp-key-secret-vault', description: 'Resource ID of the key vault where K8s secrets will be managed') 
         string(name: 'ingressDNSName', defaultValue: 'ingress-mycicdakscluster', description: 'name of ingress controller') 
         string(name: 'acrName', defaultValue:'badalacr', description: 'name of azure container registry')
-        // string(name: 'aksServicePrincipalClientId', defaultValue:'a03158e9-58f5-4e5e-b11b-b5a2df77c661', description: 'client ID of the service principal which also has access to read keys from key vault')
         string(name: 'azurePodIdentityResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourcegroups/rg-secrets/providers/Microsoft.ManagedIdentity/userAssignedIdentities/k8s-kv-identity', description: 'Resource ID of managed service identity')
         string(name: 'clusterAdminGroupId', defaultValue: '07a020cc-3f77-470a-8e01-3eb97962e0df', description: 'Enter the Azure AD Object ID for the AD group which has admin members for this cluster')
+
+        //TODO: Remove parameters as this should not be asked by the end user.
+        string(name: 'subscriptionId', defaultValue: '4dfeb08c-7e41-40af-a9fa-fabcac401c2d', description: 'Azure Subscription Id')
+        string(name: 'tenantId', defaultValue: 'b25fcb44-9c49-413c-9fdc-b59b39447b84', description: '')
+        string(name: 'servicePrincipalId', defaultValue: 'a03158e9-58f5-4e5e-b11b-b5a2df77c661', description: 'Service Principal Id that has permissions to deploy resources')
+        string(name: 'servicePrincipalSecret', defaultValue: 'FiS+yQNCI7GrX4jJ5ydyZOH9XmbCFCSBN70SdiwwtWg=', description: 'Secret of the Service Principal')
 
     }
 
@@ -63,35 +68,22 @@ pipeline {
 
             steps {
                 //get admin contex by connecting to AKS cluster
-                echo "Testing kubectl"
-                sh "kubectl config view"
-
                 echo "------------------------------------------------------------------"
                 echo "  0. Getting kubernetes context"
                 echo "------------------------------------------------------------------"
 
-                // script {
-                //     def exists = fileExists "~/.kube/config"
-                //     echo 
-
-                //     echo "Kube config exists: ${exists}"
-                //     if (exists) {
-                //         echo "Removing current kube config"
-                //         sh "rm ~/.kube/config"
-                //     }
-                // }
                 sh "rm ~/.kube/config"
 
-                sh "az login --service-principal -u \"a03158e9-58f5-4e5e-b11b-b5a2df77c661\" -p \"FiS+yQNCI7GrX4jJ5ydyZOH9XmbCFCSBN70SdiwwtWg=\" --tenant \"b25fcb44-9c49-413c-9fdc-b59b39447b84\""
+                sh "az login --service-principal -u \"${params.servicePrincipalId}\" -p \"${params.servicePrincipalSecret}\" --tenant \"${params.tenantId}\""
                 sh "az aks get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
 
                 //1. Install Helm and Initialize and Install ingress controller
                 echo "--------------------------------------------------------------------------"
                 echo "  1. Installing and initializing Helm "
                 echo "--------------------------------------------------------------------------"
-                echo "changing permission"
-                sh "id -a"
-                // sh "sudo -S chmod 755 -R ${WORKSPACE}${'\n'}Welcome1234#"
+                // echo "changing permission"
+                // sh "id -a"
+                // // sh "sudo -S chmod 755 -R ${WORKSPACE}${'\n'}Welcome1234#"
                 sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-helm.sh"
 
                 //2. Install nginx Ingress Controller
@@ -102,7 +94,7 @@ pipeline {
 
                 //3. Create Cluster Role Bindings based on the admin group id passed
                 echo "--------------------------------------------------------------------------"
-                echo "3. Creating Cluster Admin Role Binding for this AKS cluster"
+                echo "  3. Creating Cluster Admin Role Binding for this AKS cluster"
                 echo "--------------------------------------------------------------------------"
                 sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-cluster-admin-rolebinding.sh ${params.acrName} ${params.clusterAdminGroupId}"
 
@@ -111,19 +103,20 @@ pipeline {
                 echo "  4. Install Azure Pod Identity Resources & Install Azure Key Vault Support"
                 echo "------------------------------------------------------------------------------------"
                 sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-azurepodidentity-keyvault-flextool.sh ${params.resourceGroup} ${params.clusterName} ${params.acrName} ${params.keyVaultResourceId} ${params.azurePodIdentityResourceId}"
-/*
+
                 //5. Install Kube Router 
-                echo "--------------------------------------------------------------------------"
-                echo "  5. Install kube router to support network policies                      "
-                echo "--------------------------------------------------------------------------"
-                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-kube-router ${params.resourceGroup} ${params.clusterName}" 
+                echo "-------------------------------------------------------------------------------"
+                echo "  5. Install kube router to support network policies for interpod networking   "
+                echo "-------------------------------------------------------------------------------"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-kube-router" 
 
                 //6. Install OSBA Service Catalog
                 echo "--------------------------------------------------------------------------"
                 echo "  6. Install OSBA Service Catalog                     "
                 echo "--------------------------------------------------------------------------"
-                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-osba-service-catalog ${params.resourceGroup} ${params.clusterName}" 
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-osba-service-catalog.sh ${params.subscriptionId} ${params.tenantId} ${params.servicePrincipalId} ${params.servicePrincipalSecret}" 
                 
+/*
                 //7. Install cluster scaler??
                 echo "--------------------------------------------------------------------------"
                 echo "  7. Install cluster scaler                     "
