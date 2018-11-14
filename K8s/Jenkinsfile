@@ -12,7 +12,7 @@ pipeline {
         string(name: 'acrName', defaultValue:'badalacr', description: 'name of azure container registry')
         // string(name: 'aksServicePrincipalClientId', defaultValue:'a03158e9-58f5-4e5e-b11b-b5a2df77c661', description: 'client ID of the service principal which also has access to read keys from key vault')
         string(name: 'azurePodIdentityResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourcegroups/rg-secrets/providers/Microsoft.ManagedIdentity/userAssignedIdentities/k8s-kv-identity', description: 'Resource ID of managed service identity')
-        string(name: 'clusterAdminGroupId', defaultValue: '', description: 'Enter the Azure AD Object ID for the AD group which has admin members for this cluster')
+        string(name: 'clusterAdminGroupId', defaultValue: '07a020cc-3f77-470a-8e01-3eb97962e0df', description: 'Enter the Azure AD Object ID for the AD group which has admin members for this cluster')
 
     }
 
