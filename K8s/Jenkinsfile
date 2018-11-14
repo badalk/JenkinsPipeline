@@ -11,7 +11,8 @@ pipeline {
         string(name: 'ingressDNSName', defaultValue: 'ingress-mycicdakscluster', description: 'name of ingress controller') 
         string(name: 'acrName', defaultValue:'badalacr', description: 'name of azure container registry')
         // string(name: 'aksServicePrincipalClientId', defaultValue:'a03158e9-58f5-4e5e-b11b-b5a2df77c661', description: 'client ID of the service principal which also has access to read keys from key vault')
-        string(name: 'azurePodIdentityResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourcegroups/rg-secrets/providers/Microsoft.ManagedIdentity/userAssignedIdentities/k8s-kv-identity', description: 'Resource ID of managed service identity or pod identity')
+        string(name: 'azurePodIdentityResourceId', defaultValue: '/subscriptions/4dfeb08c-7e41-40af-a9fa-fabcac401c2d/resourcegroups/rg-secrets/providers/Microsoft.ManagedIdentity/userAssignedIdentities/k8s-kv-identity', description: 'Resource ID of managed service identity')
+        string(name: 'clusterAdminGroupId', defaultValue: '', description: 'Enter the Azure AD Object ID for the AD group which has admin members for this cluster')
 
     }
 
@@ -50,7 +51,7 @@ pipeline {
             steps {
                 echo "Deploying AKS Cluster ..."
                 
-                //sh "pwsh -File K8s/deploy-aks-cluster.ps1 ${WORKSPACE}/output.json \"${BUILD_USER}\" ${params.SubscriptionName} ${params.AutomationAccountName} ${params.Name} ${params.ResourceGroupName}"
+                //sh "bash pwsh -File K8s/deploy-aks-cluster.ps1 ${WORKSPACE}/output.json \"${BUILD_USER}\" ${params.SubscriptionName} ${params.AutomationAccountName} ${params.Name} ${params.ResourceGroupName}"
             }
         }
         stage ("Configure AKS"){
@@ -80,8 +81,8 @@ pipeline {
                 sh "az aks get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
 
                 //1. Create Cluster Role Bindings will
-                //echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
-                // sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/deploy-aks-create-cluster-admin-rolebindings.sh"
+                echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-cluster-admin-rolebinding.sh ${params.acrName} ${params.clusterAdminGroupId}"
 
                 //2. Install Helm and Initialize and Install ingress controller
                 echo "--------------------------------------------------------------------------"
