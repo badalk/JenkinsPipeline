@@ -80,24 +80,26 @@ pipeline {
                 sh "az login --service-principal -u \"a03158e9-58f5-4e5e-b11b-b5a2df77c661\" -p \"FiS+yQNCI7GrX4jJ5ydyZOH9XmbCFCSBN70SdiwwtWg=\" --tenant \"b25fcb44-9c49-413c-9fdc-b59b39447b84\""
                 sh "az aks get-credentials --resource-group ${params.resourceGroup} --name ${params.clusterName} --admin"
 
-                //1. Create Cluster Role Bindings will
-                echo "1. Creating Cluster Admin Role Binding for this AKS cluster"
-                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-cluster-admin-rolebinding.sh ${params.acrName} ${params.clusterAdminGroupId}"
-
-                //2. Install Helm and Initialize and Install ingress controller
+                //1. Install Helm and Initialize and Install ingress controller
                 echo "--------------------------------------------------------------------------"
-                echo "  2. Installing and initializing Helm "
+                echo "  1. Installing and initializing Helm "
                 echo "--------------------------------------------------------------------------"
                 echo "changing permission"
                 sh "id -a"
                 // sh "sudo -S chmod 755 -R ${WORKSPACE}${'\n'}Welcome1234#"
                 sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-helm.sh"
 
-                //3. Install nginx Ingress Controller
+                //2. Install nginx Ingress Controller
                 echo "--------------------------------------------------------------------------"
-                echo "  3. Installing nginx ingress controller on static IP"
+                echo "  2. Installing nginx ingress controller on static IP"
                 echo "--------------------------------------------------------------------------"
                 sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-ingress-controller.sh ${params.resourceGroup} ${params.clusterName}"
+
+                //3. Create Cluster Role Bindings based on the admin group id passed
+                echo "--------------------------------------------------------------------------"
+                echo "3. Creating Cluster Admin Role Binding for this AKS cluster"
+                echo "--------------------------------------------------------------------------"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-cluster-admin-rolebinding.sh ${params.acrName} ${params.clusterAdminGroupId}"
 
                 //4. Install Azure Pod Identity Resources & Install Azure Key Vault Support
                 echo "------------------------------------------------------------------------------------"
