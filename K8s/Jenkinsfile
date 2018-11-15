@@ -96,7 +96,7 @@ pipeline {
                 echo "--------------------------------------------------------------------------"
                 echo "  3. Creating Cluster Admin Role Binding for this AKS cluster"
                 echo "--------------------------------------------------------------------------"
-                //sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-cluster-admin-rolebinding.sh ${params.acrName} ${params.clusterAdminGroupId}"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-cluster-admin-rolebinding.sh ${params.acrName} ${params.clusterAdminGroupId}"
 
                 //4. Install Azure Pod Identity Resources & Install Azure Key Vault Support
                 echo "------------------------------------------------------------------------------------"
@@ -108,7 +108,7 @@ pipeline {
                 echo "-------------------------------------------------------------------------------"
                 echo "  5. Install kube router to support network policies for interpod networking   "
                 echo "-------------------------------------------------------------------------------"
-                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-kube-router" 
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-kube-router.sh" 
 
                 //6. Install OSBA Service Catalog
                 echo "--------------------------------------------------------------------------"
