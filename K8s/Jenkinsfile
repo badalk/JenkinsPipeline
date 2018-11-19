@@ -62,6 +62,11 @@ pipeline {
                 echo "Deploying AKS Cluster ..."
                 
                 //sh "bash pwsh -File K8s/deploy-aks-cluster.ps1 ${WORKSPACE}/output.json \"${BUILD_USER}\" ${params.SubscriptionName} ${params.AutomationAccountName} ${params.Name} ${params.ResourceGroupName}"
+
+                //Add tags from main resource group to the one that is created by AKS (i.e. MC_???)
+                echo "Adding tags to AKS node resource group"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-azure-add-tags.sh ${params.resourceGroup} ${params.clusterName}"
+
             }
         }
         stage ("Configure AKS"){
@@ -104,18 +109,18 @@ pipeline {
                 echo "------------------------------------------------------------------------------------"
                 sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-azurepodidentity-keyvault-flextool.sh ${params.resourceGroup} ${params.clusterName} ${params.acrName} ${params.keyVaultResourceId} ${params.azurePodIdentityResourceId}"
 
-                //5. Install Kube Router 
+                //5. Install OSBA Service Catalog
+                echo "--------------------------------------------------------------------------"
+                echo "  5. Install Azure OSBA Service Catalog                     "
+                echo "--------------------------------------------------------------------------"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-osba-service-catalog.sh ${params.subscriptionId} ${params.tenantId} ${params.servicePrincipalId} ${params.servicePrincipalSecret}" 
+                
+                //6. Install Kube Router 
                 echo "-------------------------------------------------------------------------------"
                 echo "  5. Install kube router to support network policies for interpod networking   "
                 echo "-------------------------------------------------------------------------------"
                 sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-kube-router.sh" 
 
-                //6. Install OSBA Service Catalog
-                echo "--------------------------------------------------------------------------"
-                echo "  6. Install Azure OSBA Service Catalog                     "
-                echo "--------------------------------------------------------------------------"
-                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-osba-service-catalog.sh ${params.subscriptionId} ${params.tenantId} ${params.servicePrincipalId} ${params.servicePrincipalSecret}" 
-                
 /*
                 //7. Install cluster scaler??
                 echo "--------------------------------------------------------------------------"
