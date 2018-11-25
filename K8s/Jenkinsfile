@@ -93,12 +93,6 @@ pipeline {
                 // // sh "sudo -S chmod 755 -R ${WORKSPACE}${'\n'}Welcome1234#"
                 sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-helm.sh"
 
-                //5. Install OSBA Service Catalog
-                echo "--------------------------------------------------------------------------"
-                echo "  5. Install Azure OSBA Service Catalog                     "
-                echo "--------------------------------------------------------------------------"
-                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-osba-service-catalog.sh ${params.subscriptionId} ${params.tenantId} ${params.servicePrincipalId} ${params.servicePrincipalSecret}" 
-
                 //2. Install nginx Ingress Controller
                 echo "--------------------------------------------------------------------------"
                 echo "  2. Installing nginx ingress controller on static IP"
@@ -118,6 +112,12 @@ pipeline {
                 sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-azurepodidentity-keyvault-flextool.sh ${params.resourceGroup} ${params.clusterName} ${params.acrName} ${params.keyVaultResourceId} ${params.azurePodIdentityResourceId}"
 
                 
+                //5. Install OSBA Service Catalog
+                echo "--------------------------------------------------------------------------"
+                echo "  5. Install Azure OSBA Service Catalog                     "
+                echo "--------------------------------------------------------------------------"
+                sh "bash ${WORKSPACE}/AzureResourceGroup1/rg-AKS/Scripts/k8s-install-osba-service-catalog.sh ${params.subscriptionId} ${params.tenantId} ${params.servicePrincipalId} ${params.servicePrincipalSecret}" 
+
                 //6. Install Kube Router 
                 echo "-------------------------------------------------------------------------------"
                 echo "  5. Install kube router to support network policies for interpod networking   "
