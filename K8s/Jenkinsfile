@@ -20,6 +20,10 @@ pipeline {
         string(name: 'clusterAdminGroupId', defaultValue: '07a020cc-3f77-470a-8e01-3eb97962e0df', description: 'Enter the Azure AD Object ID for the AD group which has admin members for this cluster')
 
         //TODO: Remove parameters as this should not be asked by the end user.
+        string(name: 'subscriptionId', description: 'Azure Subscription Id')
+        string(name: 'tenantId', description: '')
+        string(name: 'servicePrincipalId', description: 'Service Principal Id that has permissions to deploy resources')
+        string(name: 'servicePrincipalSecret', description: 'Secret of the Service Principal')
 
     }
 
